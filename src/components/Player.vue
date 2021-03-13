@@ -1,6 +1,7 @@
 <template>
   <div id="player">
     <div id="player_title">
+      Will delete or recicle
       <small>Player</small>
       <h2>{{ player }}</h2>
     </div>

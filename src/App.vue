@@ -23,3 +23,4 @@
   right: 10px;
 }
 </style>
+./components/single_player/Stats.vue./components/single_player/Mastery.vue

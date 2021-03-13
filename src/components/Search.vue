@@ -2,30 +2,54 @@
   <div id="search">
     <form v-on:submit.prevent="search">
       <label>Player</label>
-      <input type="text" placeholder="Name player" v-model="gametag" />
+      <input
+        type="text"
+        placeholder="Name player"
+        v-model="gametag"
+        :disabled="disabled"
+      />
       <div class="warning">
         <small v-if="min_characters_notice">Minimum 4 characters</small>
+      </div>
+      <div class="warning" id="notfound">
+        <small v-if="notfound">Player {{ gametag }} not found</small>
       </div>
     </form>
   </div>
 </template>
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "Search",
   props: {
-    fetch_player: Function,
+    is_main: Boolean,
   },
   data() {
     return {
       gametag: "",
+      disabled: false,
+      notfound: false,
     };
   },
   methods: {
     search() {
       if (this.gametag.length > 4) {
-        this.fetch_player(this.gametag);
+        this.disabled = true;
+        this.fetch_player(this.gametag).then((response) => {
+          this.disabled = false;
+          if (response) {
+            console.log("gol");
+            if (this.is_main) {
+              console.log("chaolin");
+              this.$router.push("/" + this.gametag);
+            }
+          } else {
+            this.notfound = true;
+          }
+        });
       }
     },
+    ...mapActions(["fetch_player"]),
   },
   computed: {
     min_characters_notice: function () {
@@ -34,6 +58,11 @@ export default {
       } else {
         return false;
       }
+    },
+  },
+  watch: {
+    gametag: function () {
+      this.notfound = false;
     },
   },
 };
@@ -84,6 +113,11 @@ export default {
     text-align: right;
     color: $gray;
     font-family: "Teko";
+  }
+
+  #notfound {
+    color: red;
+    font-size: 1.3em;
   }
 }
 </style>
