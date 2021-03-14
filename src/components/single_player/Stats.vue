@@ -1,8 +1,16 @@
 <template>
   <div id="stat">
-    <h3>{{ stat.type_name }}</h3>
+    <div id="stat_header">
+      <h3>{{ stat.type_name }}</h3>
+      <div>
+        <button @click="show_secondary = !show_secondary">
+          <span v-if="!show_secondary">+</span>
+          <span v-if="show_secondary">-</span>
+        </button>
+      </div>
+    </div>
 
-    <div id="table">
+    <div id="principal" class="table">
       <div class="stats">
         <small>Wins</small>
         <p>{{ stat.wins }}</p>
@@ -15,6 +23,8 @@
         <small>Assists</small>
         <p>{{ stat.assists }}</p>
       </div>
+    </div>
+    <div id="secondary" class="table" v-if="show_secondary">
       <div class="stats">
         <small>Damage</small>
         <p>{{ stat.damage }}</p>
@@ -48,21 +58,53 @@ export default {
   props: {
     stat: Object,
   },
+  data() {
+    return {
+      show_secondary: false,
+    };
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 #stat {
   margin-bottom: 10px;
-  h3 {
-    padding: 5px 5px 0px 3px;
-    font-family: "Pubg";
-    font-weight: 400;
+  #stat_header {
     background-color: $second_color;
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 0px 3px 0px 3px;
+    h3 {
+      display: flex;
+      align-items: center;
+      font-size: 1.2em;
+      font-family: "Teko";
+      font-weight: 400;
+
+      text-transform: uppercase;
+    }
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      button {
+        background: none;
+        color: inherit;
+        border: none;
+        line-height: 0px;
+        font-family: "Teko";
+        font-weight: 400;
+        font-size: 2em;
+        cursor: pointer;
+        outline: inherit;
+      }
+    }
   }
 
-  #table {
+  .table {
     border: solid 2px $second_color;
+    border-top: none;
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -77,14 +119,19 @@ export default {
         border-left: solid 1px $light_color;
         border-right: solid 1px $light_color;
       }
-      &:nth-child(-n + 6) {
-        border-bottom: solid 1px $light_color;
-      }
+
       small {
         color: $second_color;
       }
       p {
         font-size: 1.5em;
+      }
+    }
+  }
+  #secondary {
+    &.table {
+      .stats:nth-child(-n + 3) {
+        border-bottom: solid 1px $light_color;
       }
     }
   }

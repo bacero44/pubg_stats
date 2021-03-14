@@ -77,7 +77,7 @@ export default {
   transform: translate(-50%, -50%);
   width: 80%;
   display: block;
-
+  min-height: 20%;
   label {
     color: $light_color;
     font-family: "Teko";

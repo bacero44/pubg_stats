@@ -1,6 +1,5 @@
 <template>
-  <div id="app">
-    Home
+  <div id="home">
     <Search :is_main="true"></Search>
   </div>
 </template>
@@ -33,10 +32,7 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
-  #notice {
-    color: $second_color;
-  }
+#home {
   #getting {
     position: absolute;
     top: 50%;
