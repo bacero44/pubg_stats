@@ -52,17 +52,19 @@ export default {
   #level {
     background-color: $second_color;
     text-align: center;
-    padding: 5px 10px 5px 10px;
+    padding: 5px 5px 5px 5px;
     display: flex;
     align-items: center;
     justify-content: center;
 
     div {
+      width: 100%;
       h3 {
         text-align: center;
         line-height: 0.8em;
         margin-bottom: 5px;
         text-transform: uppercase;
+        word-wrap: break-word;
       }
       h4 {
         color: white;

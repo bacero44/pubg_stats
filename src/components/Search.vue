@@ -14,6 +14,9 @@
       <div class="warning" id="notfound">
         <small v-if="notfound">Player {{ gametag }} not found</small>
       </div>
+      <div id="searching">
+        <small v-if="disabled">Searching...</small>
+      </div>
     </form>
   </div>
 </template>
@@ -113,6 +116,12 @@ export default {
     text-align: right;
     color: $gray;
     font-family: "Teko";
+  }
+  #searching {
+    text-align: right;
+    color: $light_color;
+    font-family: "Teko";
+    font-size: 1.3em;
   }
 
   #notfound {

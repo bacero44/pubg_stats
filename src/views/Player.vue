@@ -1,7 +1,10 @@
 <template>
   <div id="single_player">
-    <div id="seraching" v-if="serching">Searching...</div>
-    <div id="playernotfound" v-if="notfound">No se econtro</div>
+    <div id="seraching" class="center" v-if="serching">Searching...</div>
+    <div id="playernotfound" class="center" v-if="notfound">
+      <p>The player was not found</p>
+      <router-link to="/">Search again</router-link>
+    </div>
     <div v-if="!serching && !notfound">
       <div id="player_title" v-bind:class="{ small: isScroll }">
         <small>Player</small>
@@ -51,103 +54,6 @@
               v-for="(value, index) in main_player.data.mastery"
               :key="index + 'mastery'"
             ></Mastery>
-          </div>
-        </div>
-        <div class="stats_group">
-          <div id="stats_header" class="group_header">
-            <h2>Another</h2>
-          </div>
-          <div class="group_content">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
-            tempora nihil dolorem incidunt illum veniam quidem omnis laboriosam
-            assumenda. Labore eveniet perspiciatis ipsa ipsum id. Modi
-            consectetur totam id mollitia!
-            <br />
           </div>
         </div>
       </div>
@@ -210,7 +116,7 @@ export default {
     },
     handleScroll() {
       // TITLE
-     
+
       if (
         document.getElementById("player_data").getBoundingClientRect().top < 0
       ) {
@@ -236,34 +142,6 @@ export default {
           g.querySelector(".group_content").classList.add("fixed_head");
         }
       });
-
-      // //STAST
-
-      // const sh = document.getElementById("stats_header");
-      // const ps = document.getElementById("player_stats");
-      // const pre1 = pt.offsetHeight + sh.offsetHeight;
-
-      // if (
-      //   ps.getBoundingClientRect().top < pre1 &&
-      //   ps.getBoundingClientRect().bottom > pre1
-      // ) {
-      //   this.isOnStats = true;
-      // } else {
-      //   this.isOnStats = false;
-      // }
-      // // MASTERY
-
-      // const mh = document.getElementById("mastery_header");
-      // const pm = document.getElementById("player_mastery");
-      // const pre = pt.offsetHeight + mh.offsetHeight;
-      // if (
-      //   pm.getBoundingClientRect().top < pre &&
-      //   pm.getBoundingClientRect().bottom > pre
-      // ) {
-      //   this.isOnMastery = true;
-      // } else {
-      //   this.isOnMastery = false;
-      // }
     },
   },
   computed: {
@@ -288,6 +166,26 @@ export default {
 
 <style lang="scss">
 #single_player {
+  .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Teko", sans-serif;
+  }
+  #seraching {
+    color: $light_color;
+    font-size: 2.5em;
+  }
+  #playernotfound {
+    color: $main_color;
+    font-size: 2.5em;
+    text-align: center;
+    a {
+      text-decoration: none;
+      color: $light_color;
+    }
+  }
   #player_title {
     position: fixed;
     background-color: $dark;
