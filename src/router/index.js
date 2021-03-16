@@ -13,8 +13,13 @@ const routes = [
   },
    {
     path: '/:player',
-    name: 'player',
+    name: 'Player',
     component:() => import("../views/Player.vue"),
+  },
+  {
+    path: '/:player1/vs/:player2',
+    name: 'Versus',
+    component:() => import("../views/Versus.vue"),
   },
   {
     path: '/Bacero44/about',

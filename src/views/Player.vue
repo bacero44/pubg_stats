@@ -86,7 +86,7 @@ export default {
   methods: {
     search(gametag) {
       if (gametag.length > 4) {
-        this.fetch_player(gametag).then((response) => {
+        this.fetch_main_player(gametag).then((response) => {
           if (response) {
             this.serching = false;
           } else {
@@ -96,7 +96,7 @@ export default {
         });
       }
     },
-    ...mapActions(["fetch_player"]),
+    ...mapActions(["fetch_main_player"]),
 
     order_mastery_numbers(attribute, invert) {
       this.main_player.data.mastery.sort(function (a, b) {
@@ -150,7 +150,11 @@ export default {
   },
 
   created: function () {
-    if (this.$route.params.player && this.main_player.nametag == "") {
+    console.log("creadted");
+    if (
+      (this.$route.params.player && this.main_player.nametag == "") ||
+      this.$route.params.player != this.main_player.nametag
+    ) {
       this.search(this.$route.params.player);
     } else {
       this.serching = false;
