@@ -36,14 +36,13 @@ export default {
   },
   methods: {
     search() {
+      console.log("entra");
       if (this.gametag.length > 4) {
         this.disabled = true;
-        this.fetch_player(this.gametag).then((response) => {
+        this.fetch_main_player(this.gametag).then((response) => {
           this.disabled = false;
           if (response) {
-            console.log("gol");
             if (this.is_main) {
-              console.log("chaolin");
               this.$router.push("/" + this.gametag);
             }
           } else {
@@ -52,7 +51,7 @@ export default {
         });
       }
     },
-    ...mapActions(["fetch_player"]),
+    ...mapActions(["fetch_main_player"]),
   },
   computed: {
     min_characters_notice: function () {

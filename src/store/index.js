@@ -6,13 +6,12 @@ axios.defaults.baseURL = "http://192.168.2.160:4567/player/"
 Vue.use(Vuex)
 
 
-
 export default new Vuex.Store({
     state: {
-        
-        main_player: {
-            nametag: "",
-            data: {},
+      main_player: {
+        nametag: "",
+        data: {},
+        matches: {},
       },
       players: []
     },
@@ -20,6 +19,11 @@ export default new Vuex.Store({
     setPlayer(state, payload) {
       state.main_player.nametag = payload.nametag;
       state.main_player.data = payload.data;
+    },
+    setMatches(state, payload) {
+      
+      state.main_player.nametag = payload.nametag;
+      state.main_player.matches = payload.matches;
     },
     setVersus(state, payload) {
       let stats = {
@@ -59,19 +63,56 @@ export default new Vuex.Store({
             })
         return fetched
       },
-     async fetch_player({ commit }, nametag) {
+      async fetch_matches({ commit},nametag ) {
+        let fetched = false
+        await axios.get("/" +nametag+"/matches")
+          .then((response) => {
+            commit("setMatches", { "nametag": nametag, "matches": response.data.matches });
+            fetched = true
+            }, (err) => {
+              console.log(err);
+              fetched = false
+            })
+        return fetched
+      },
+      async fetch_player({ commit }, nametag) {
         axios.get("/" + nametag)
           .then((response) => {
           commit("setVersus", { "nametag": nametag, "data": response.data });
         }, (err) => {
           console.log(err);
         })
-      }
-    },
+      },
+
+      handleScroll() {
+        
+        const title = document.getElementById("player_title");
+        const pt = title.offsetHeight;
+        const sg = document.querySelectorAll(".stats_group");
+
+        sg.forEach((g) => {
+          
+          const gTop = g.getBoundingClientRect().top;
+          const gBottom = g.getBoundingClientRect().bottom;
+
+          if (gTop >= pt || gBottom <= pt || !title.classList.contains("small")) {
+            g.querySelector(".group_header").classList.remove("fixed_head");
+            g.querySelector(".group_content").classList.remove("fixed_head");
+          }
+          if (gTop <= pt && gBottom >= pt && title.classList.contains("small")) {
+            g.querySelector(".group_header").classList.add("fixed_head");
+            g.querySelector(".group_content").classList.add("fixed_head");
+            }
+        });
+      },
+  },
+    
+    
   getters: {
     stats: state => {
       return state.main_player.nametag
     }
+
   },
   modules: {
   }

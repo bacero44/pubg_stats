@@ -6,10 +6,6 @@
       <router-link to="/">Search again</router-link>
     </div>
     <div v-if="!serching && !notfound">
-      <div id="player_title" v-bind:class="{ small: isScroll }">
-        <small>Player</small>
-        <h1>{{ main_player.nametag }}</h1>
-      </div>
       <div id="player_data">
         <div class="stats_group">
           <div id="stats_header" class="group_header">
@@ -56,6 +52,27 @@
             ></Mastery>
           </div>
         </div>
+        <div class="stats_group" id="player_last_matches">
+          <div id="matches_header" class="group_header">
+            <h2>Last 5 Matches</h2>
+            <router-link
+              :to="{ name: 'Matches', params: { player: main_player.nametag } }"
+              >all</router-link
+            >
+          </div>
+          <div class="group_content">
+            <div class="" v-if="getting_matches">Loading...</div>
+            <div class="" v-if="notfound_matches">Matches was not fund</div>
+            <div v-if="matchesExist">
+              <Match
+                :match="match"
+                :main_player="main_player.nametag"
+                v-for="(match, index) in main_player.matches.slice(0, 5)"
+                :key="index + 'match'"
+              ></Match>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -63,17 +80,18 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
+
 export default {
   name: "Player",
   components: {
     Stats: () => import("@/components/single_player/Stats.vue"),
     Mastery: () => import("@/components/single_player/Mastery.vue"),
+    Match: () => import("@/components/matches/Match.vue"),
   },
   data() {
     return {
       serching: true,
       notfound: false,
-      isScroll: false,
 
       orders: {
         kills: true,
@@ -81,12 +99,14 @@ export default {
         head_shots: true,
         name: true,
       },
+      getting_matches: false,
+      notfound_matches: false,
     };
   },
   methods: {
-    search(gametag) {
-      if (gametag.length > 4) {
-        this.fetch_main_player(gametag).then((response) => {
+    search(nametag) {
+      if (nametag.length > 4) {
+        this.fetch_main_player(nametag).then((response) => {
           if (response) {
             this.serching = false;
           } else {
@@ -96,7 +116,29 @@ export default {
         });
       }
     },
-    ...mapActions(["fetch_main_player"]),
+
+    scrolling() {
+      this.handleScroll();
+      this.matches();
+    },
+
+    matches() {
+      const p = document.getElementById("player_last_matches").offsetTop;
+      const w = window.pageYOffset + window.innerHeight;
+
+      if (w > p && !this.getting_matches && !this.matchesExist) {
+        this.getting_matches = true;
+        this.fetch_matches(this.main_player.nametag).then((response) => {
+          if (response) {
+            this.getting_matches = false;
+          } else {
+            this.notfound_matches = true;
+          }
+        });
+      }
+    },
+
+    ...mapActions(["fetch_main_player", "fetch_matches", "handleScroll"]),
 
     order_mastery_numbers(attribute, invert) {
       this.main_player.data.mastery.sort(function (a, b) {
@@ -114,56 +156,32 @@ export default {
       });
       this.orders[attribute] = !invert;
     },
-    handleScroll() {
-      // TITLE
-
-      if (
-        document.getElementById("player_data").getBoundingClientRect().top < 0
-      ) {
-        this.isScroll = true;
-      } else {
-        this.isScroll = false;
-      }
-
-      const pt = document.getElementById("player_title").offsetHeight;
-
-      //STATS GROUP
-      const sg = document.querySelectorAll(".stats_group");
-      sg.forEach((g) => {
-        const gTop = g.getBoundingClientRect().top;
-        const gBottom = g.getBoundingClientRect().bottom;
-
-        if (gTop >= pt || gBottom <= pt) {
-          g.querySelector(".group_header").classList.remove("fixed_head");
-          g.querySelector(".group_content").classList.remove("fixed_head");
-        }
-        if (gTop <= pt && gBottom >= pt) {
-          g.querySelector(".group_header").classList.add("fixed_head");
-          g.querySelector(".group_content").classList.add("fixed_head");
-        }
-      });
-    },
   },
   computed: {
     ...mapState(["main_player"]),
     ...mapGetters(["stats"]),
+    matchesExist: function () {
+      return Object.keys(this.main_player.matches).length > 0 ? true : false;
+    },
   },
+  watch: {},
 
   created: function () {
-    console.log("creadted");
     if (
       (this.$route.params.player && this.main_player.nametag == "") ||
-      this.$route.params.player != this.main_player.nametag
+      this.$route.params.player != this.main_player.nametag ||
+      Object.keys(this.main_player.data).length == 0
     ) {
       this.search(this.$route.params.player);
     } else {
       this.serching = false;
     }
-    window.addEventListener("scroll", this.handleScroll);
+
+    window.addEventListener("scroll", this.scrolling);
   },
 
   destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("scroll", this.scrolling);
   },
 };
 </script>
@@ -190,25 +208,7 @@ export default {
       color: $light_color;
     }
   }
-  #player_title {
-    position: fixed;
-    background-color: $dark;
-    width: 100%;
-    small {
-      font-family: "Teko", sans-serif;
-      color: $light_color;
-      font-size: 1.5em;
-    }
-    h1 {
-      font-family: "Pubg";
-      font-size: 5em;
-      font-weight: 500;
-      color: $light_color;
-    }
-    &.small {
-      font-size: 0.5em;
-    }
-  }
+
   h2 {
     font-family: "Teko", sans-serif;
     color: $light_color;
@@ -216,28 +216,22 @@ export default {
   }
 
   #player_data {
-    padding-top: 120px;
-    #stats_header {
-      &.fixed_head {
-        position: fixed;
-        top: 50px;
-        right: 0;
-        background-color: $dark;
-        width: 100%;
-        padding-right: 2vw;
-        padding-left: 2vw;
-      }
-    }
+    padding-top: 0px;
+
     .stats_group {
-      margin-bottom: 35px;
+      &:not(:last-child) {
+        margin-bottom: 30px;
+      }
+
       #mastery_header {
         display: grid;
         grid-template-columns: auto auto;
-        padding-top: 5px;
-        padding-bottom: 5px;
+
         #orders {
-          text-align: right;
-          margin-bottom: 5px;
+          display: flex;
+          align-items: center;
+          margin-left: auto;
+
           button {
             font-family: "Teko";
             font-weight: 400;
@@ -255,7 +249,24 @@ export default {
         }
       }
 
+      #matches_header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        padding-bottom: 2px;
+        a {
+          font-family: "Teko";
+          padding: 5px 8px 5px 8px;
+          color: $light_color;
+          border: solid 2px $second_color;
+          cursor: pointer;
+          text-decoration: none;
+          text-transform: capitalize;
+        }
+      }
+
       .group_header {
+        padding-top: 8px;
+
         &.fixed_head {
           position: fixed;
           top: 50px;
@@ -268,7 +279,7 @@ export default {
       }
       .group_content {
         &.fixed_head {
-          padding-top: 2em;
+          padding-top: 50px;
         }
       }
     }
